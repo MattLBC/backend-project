@@ -143,3 +143,22 @@ describe("PATCH api/reviews/:review_id", () => {
       });
   });
 });
+
+describe("GET api/users", () => {
+  test("Status 200 - response with array of user objects, with correct properties", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: {users} }) => {
+        expect(users).toBeInstanceOf(Array);
+        expect(users.length).toBeGreaterThan(0)
+        users.forEach((user) => {
+            expect.objectContaining({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String)
+            })
+        })
+      });
+  });
+});
