@@ -48,7 +48,6 @@ describe("GET api/reviews/review_id", () => {
       .get("/api/reviews/3")
       .expect(200)
       .then(({ body: { review } }) => {
-        expect(review).toBeInstanceOf(Object);
         expect.objectContaining({
           review_id: expect.any(Number),
           title: expect.any(String),

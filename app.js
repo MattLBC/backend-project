@@ -8,6 +8,7 @@ const app = express();
 
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewById);
+app.patch("/api/reviews/:review_id", patchVotes)
 
 app.use("/*", (req, res, next) => {
   res.status(404).send({ msg: "Route not found" });
