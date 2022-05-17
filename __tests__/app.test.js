@@ -77,6 +77,14 @@ describe("GET api/reviews/review_id", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
+  test("Review object now has comment count", () => {
+    return request(app)
+    .get("/api/reviews/3")
+    .expect(200)
+    .then(({ body: { review } }) => {
+      expect(review.comment_count).toBe(3)
+    });
+  })
 });
 
 describe("PATCH api/reviews/:review_id", () => {
