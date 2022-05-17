@@ -4,7 +4,6 @@ const db = require("../db/connection");
 const data = require("../db/data/test-data/index");
 const app = require("../app");
 const request = require("supertest");
-const { get } = require("express/lib/response");
 
 beforeEach(() => {
   return seed(data);
