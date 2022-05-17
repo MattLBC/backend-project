@@ -92,7 +92,7 @@ describe("GET api/reviews/review_id", () => {
       .then(({ body: { review } }) => {
         expect(review.comment_count).toBe("0");
       });
-  })
+  });
 });
 
 describe("PATCH api/reviews/:review_id", () => {
@@ -197,9 +197,58 @@ describe("GET api/reviews", () => {
             created_at: expect.any(String),
             votes: expect.any(Number),
             comment_count: expect.any(Number),
-          })
-        })
-        expect(reviews).toBeSortedBy("created_at", { descending: true, coerce: true})
+          });
+        });
+        expect(reviews).toBeSortedBy("created_at", {
+          descending: true,
+          coerce: true,
+        });
+      });
+  });
+});
+
+describe("GET api/reviews/:review_id/comments", () => {
+  test("Status 200: responds with array of comment objects", () => {
+    return request(app)
+      .get("/api/reviews/3/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeInstanceOf(Array);
+        expect(comments.length).toBeGreaterThan(0);
+        comments.forEach((comment) => {
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            review_id: expect.any(Number),
+          });
+        });
+      });
+  });
+  test("Status 404: valid number but no ID", () => {
+    return request(app)
+      .get("/api/reviews/9999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("Status 400: Something other than a number passed as review_id ", () => {
+    return request(app)
+      .get("/api/reviews/banana/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("Status 200: Review exists but has no comments", () => {
+    return request(app)
+      .get("/api/reviews/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No comments here yet!");
       });
   });
 });
