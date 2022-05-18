@@ -252,3 +252,82 @@ describe("GET api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("POST api/reviews/:review_id/comments", () => {
+  test("Statuss 201: returns the comment", () => {
+    const newComment = {
+      username: "bainesface",
+      body: "I have no idea what you mean, dogs are the best players because they are always loyal",
+    };
+    const returnedComment = {
+      comment_id: 7,
+      body: "I have no idea what you mean, dogs are the best players because they are always loyal",
+      review_id: 3,
+      author: "bainesface",
+      votes: 0,
+    };
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          created_at: expect.any(String),
+          ...returnedComment,
+        });
+      });
+  });
+  test("Status 400: body doesn't contain body mandatory key", () => {
+    const newComment = {
+      username: "bainesface",
+      banana:
+        "I have no idea what you mean, dogs are the best players because they are always loyal",
+    };
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("Status 400: body doesn't contain username mandatory key", () => {
+    const newComment = {
+      banana: "bainesface",
+      body: "I have no idea what you mean, dogs are the best players because they are always loyal",
+    };
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("Status 404: review_id doesn't exist", () => {
+    const newComment = {
+      username: "bainesface",
+      body: "I have no idea what you mean, dogs are the best players because they are always loyal",
+    };
+    return request(app)
+      .post("/api/reviews/9999/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Route not found");
+      });
+  });
+  test("Status 404: User not in the database tries to post", () => {
+    const newComment = {
+      username: "conolly_san",
+      body: "I have no idea what you mean, dogs are the best players because they are always loyal",
+    };
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Route not found");
+      });
+  });
+});
