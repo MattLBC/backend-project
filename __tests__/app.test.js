@@ -402,3 +402,24 @@ describe("POST api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("DELETE api/comments/:comment_id", () => {
+  test("Status 204: No body", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({ body }) => expect(body).toEqual({}));
+  });
+  test("Status 404: comment_id is a number but doesn't exist", () => {
+    return request(app)
+      .delete("/api/comments/9999")
+      .expect(404)
+      .then(({ body }) => expect(body.msg).toBe("Not found"));
+  });
+  test("Status 400: comment_id isn\'t an number", () => {
+    return request(app)
+      .delete("/api/comments/banana")
+      .expect(400)
+      .then(({ body }) => expect(body.msg).toBe("Bad request"));
+  });
+});
