@@ -1,4 +1,8 @@
-const { fetchReviewById, updateReviews, fetchAllReviews } = require("../models/review_model");
+const {
+  fetchReviewById,
+  updateReviews,
+  fetchAllReviews,
+} = require("../models/review_model");
 
 exports.getReviewById = (req, res, next) => {
   const { review_id } = req.params;
@@ -23,11 +27,18 @@ exports.patchReviews = (req, res, next) => {
     });
 };
 
-exports.getAllReviews =(req, res, next) => {
-  fetchAllReviews().then((reviews) => {
-    res.status(200).send({ reviews })
-  })
-  .catch((err) => {
-    next(err);
-  })
-}
+exports.getAllReviews = (req, res, next) => {
+  const { sort_by, order, category } = req.query;
+
+  fetchAllReviews(sort_by, order, category)
+    .then((reviews) => {
+      if (!reviews) {
+        res.status(200).send({ msg: "No reviews here yet!" });
+      } else {
+        res.status(200).send({ reviews });
+      }
+    })
+    .catch((err) => {
+      next(err);
+    });
+};

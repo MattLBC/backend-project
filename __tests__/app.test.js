@@ -205,6 +205,77 @@ describe("GET api/reviews", () => {
         });
       });
   });
+  test("Status 200: Can sort_by other column names", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("Status 400: Can't sort_by columns that don't exist", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("Status 200: Can sort_by order ascending", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes&order=asc")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toBeSortedBy("votes", { descending: false });
+      });
+  });
+  test("Status 400: Can't sort_by orders that don't exist", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes&order=banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("Status 200: Can sort_by category", () => {
+    const euroGames = [
+      {
+        review_id: 1,
+        title: "Agricola",
+        category: "euro game",
+        designer: "Uwe Rosenberg",
+        owner: "mallionaire",
+        review_body: "Farmyard fun!",
+        review_img_url:
+          "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+        created_at: `2021-01-18T10:00:20.514Z`,
+        votes: 1,
+        comment_count: "0",
+      },
+    ];
+    return request(app)
+      .get("/api/reviews?category=euro game")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toEqual(euroGames);
+      });
+  });
+  test("Status 404: Can't sort_by categories that don't exist", () => {
+    return request(app)
+      .get("/api/reviews?category=banana")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("Status 200: Category exists but not reviews for it", () => {
+    return request(app)
+      .get("/api/reviews?category=children's games")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No reviews here yet!");
+      });
+  });
 });
 
 describe("GET api/reviews/:review_id/comments", () => {
