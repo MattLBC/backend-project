@@ -416,10 +416,22 @@ describe("DELETE api/comments/:comment_id", () => {
       .expect(404)
       .then(({ body }) => expect(body.msg).toBe("Not found"));
   });
-  test("Status 400: comment_id isn\'t an number", () => {
+  test("Status 400: comment_id isn't an number", () => {
     return request(app)
       .delete("/api/comments/banana")
       .expect(400)
       .then(({ body }) => expect(body.msg).toBe("Bad request"));
+  });
+});
+
+describe("GET api", () => {
+  test("Status 200", () => {
+    const expected = {};
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) =>
+        expect(body).toEqual(expect.objectContaining(expected))
+      );
   });
 });

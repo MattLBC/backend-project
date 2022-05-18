@@ -11,10 +11,12 @@ const {
   postCommentByReviewId,
   deleteCommentById,
 } = require("./controllers/comment_controllers");
+const { getEndpoints } = require("./controllers/util_controllers");
 
 const app = express();
 app.use(express.json());
 
+app.get("/api", getEndpoints);
 app.get("/api/categories", getCategories);
 app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id", getReviewById);
@@ -22,7 +24,7 @@ app.patch("/api/reviews/:review_id", patchReviews);
 app.get("/api/users", getUsers);
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
-app.delete("/api/comments/:comment_id", deleteCommentById)
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 
 app.use("/*", (req, res, next) => {

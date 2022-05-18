@@ -2,6 +2,7 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+
   "GET /api/categories": {
     "description": "serves an array of all categories",
     "queries": [],
@@ -14,9 +15,10 @@
       ]
     }
   },
+
   "GET /api/reviews": {
     "description": "serves an array of all reviews",
-    "queries": ["category", "sort_by", "order"],
+    "queries": ["sort_by", "order", "category"],
     "exampleResponse": {
       "reviews": [
         {
@@ -26,9 +28,102 @@
           "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
           "category": "hidden-roles",
           "created_at": 1610964101251,
-          "votes": 5
+          "votes": 5,
+          "comment_count": 2
         }
       ]
+    }
+  },
+
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "tickle122",
+          "name": "Tom Tickle",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        }
+      ]
+    }
+  },
+
+  "DELETE /api/comments/:comment_id": {
+    "description": "removes a comment with a given ID",
+    "queries": [],
+    "exampleResponse": ""
+  },
+
+  "GET /api/reviews/:review_id": {
+    "description": "serves a review with a given ID",
+    "queries": [],
+    "exampleResponse": {
+      "review": {
+        "title": "Karma Karma Chameleon",
+        "designer": "Rikki Tahta",
+        "owner": "happyamy2016",
+        "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+        "review_body": "Try to trick your friends. If you find yourself being dealt the Chamelean card then the aim of the game is simple; blend in... Meanwhile the other players aim to be as vague as they can to not give the game away ",
+        "category": "hidden-roles",
+        "created_at": 1610964101251,
+        "votes": 5,
+        "comment_count": 3
+      }
+    }
+  },
+
+  "PATCH /api/reviews/:review_id": {
+    "description": "updates votes on a given review by a given number of votes, serves array of updated review",
+    "queries": [],
+    "exampleResponse": {
+      "review": {
+        "title": "Karma Karma Chameleon",
+        "designer": "Rikki Tahta",
+        "owner": "happyamy2016",
+        "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+        "review_body": "Try to trick your friends. If you find yourself being dealt the Chamelean card then the aim of the game is simple; blend in... Meanwhile the other players aim to be as vague as they can to not give the game away ",
+        "category": "hidden-roles",
+        "created_at": 1610964101251,
+        "votes": 5,
+        "comment_count": 3
+      }
+    },
+
+    "GET /api/reviews/:review_id/comments": {
+      "description": "serves array of comments associated with a given review",
+      "queries": [],
+      "exampleResponse": {
+        "comments": [
+          {
+            "body": "My dog loved this game too!",
+            "votes": 3,
+            "author": "tickle122",
+            "review_id": 4,
+            "created_at": 1610964545410
+          },
+          {
+            "body": "I didn't know dogs could play games",
+            "votes": 10,
+            "author": "weegembump",
+            "review_id": 4,
+            "created_at": 1610964588110
+          }
+        ]
+      }
+    },
+    "POST /api/reviews/:review_id/comments": {
+      "description": "posts a new comment associated with a given review, responds with posted comment",
+      "queries": [],
+      "exampleResponse": {
+        "comment": {
+          "body": "My dog loved this game too!",
+          "votes": 3,
+          "author": "tickle122",
+          "review_id": 4,
+          "created_at": 1610964545410
+        }
+      }
     }
   }
 }
